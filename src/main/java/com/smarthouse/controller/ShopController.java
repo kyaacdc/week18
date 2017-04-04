@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 @Controller
@@ -33,6 +35,40 @@ public class ShopController {
     @Autowired
     public void setAttributeValueRepository(AttributeValueRepository attributeValueRepository) {
         this.attributeValueRepository = attributeValueRepository;
+    }
+
+    @RequestMapping(value = "/oneClickBuy", method = RequestMethod.POST)
+    public String oneClickBuy(@RequestParam(value = "email") String email,
+                              @RequestParam(value = "sku") String sku,
+                              @RequestParam(value = "name") String name,
+                              @RequestParam(value = "phone") String phone,
+                              @RequestParam(value = "address") String address,
+                              @RequestParam(value = "amount", defaultValue = "1") int amount,
+                              Model model) {
+        shopManager.createOrder(email, name, phone, address, amount, sku);
+        shopManager.submitOrder(email);
+        model.addAttribute("listRootCategories", shopManager.getRootCategories());
+        model.addAttribute("listAllCategories", shopManager.getAllCategories());
+        model.addAttribute("success", true);
+
+        return "categories";
+    }
+
+    @RequestMapping(value = "/changeRate", method = RequestMethod.POST)
+    public String changeRate(@RequestParam(value = "rate") int rate,
+                             @RequestParam(value = "sku") String sku,
+                             @RequestParam(value = "isLike") boolean isLike,
+                              Model model) {
+
+        ProductCard productCard = productCardRepository.findOne(sku);
+        if(isLike)
+            productCard.setLikes(productCard.getLikes() + rate);
+        else
+            productCard.setDislikes(productCard.getDislikes() + rate);
+
+        productCardRepository.save(productCard);
+
+        return showProductCard(sku, model);
     }
 
     @RequestMapping(value = {"/", "/index", "/home", "/categories"}, method = RequestMethod.GET)

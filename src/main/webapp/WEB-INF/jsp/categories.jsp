@@ -54,7 +54,14 @@
 
 <c:if test="${!empty listRootCategories}">
 
-    <h1>Welcome into Internet Shop "Smart House"</h1>
+    <c:if test="${success}">
+        <h1>Thanks for your choice. Our operator will contact you as soon as possible</h1>
+        <h1>You can continue shopping</h1>
+    </c:if>
+
+    <c:if test="${!success}">
+        <h1>Welcome into Internet Shop "Smart House"</h1>
+    </c:if>
 
     <table class="tg">
         <tr>
