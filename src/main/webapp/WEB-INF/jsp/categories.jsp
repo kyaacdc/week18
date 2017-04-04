@@ -87,7 +87,7 @@
 
     <a href="/home">Back to Homepage</a>
 
-    <h1>Categories</h1>
+    <h1>SubCategories of ${listSubCategories.get(0).category.name}</h1>
 
     <table class="tg">
         <tr>
@@ -130,7 +130,7 @@
 
     <a href="/home">Back to Homepage</a>
 
-    <h1>Product cards in ${listProductCards.get(0).category.name} category</h1>
+    <h1>Product cards from ${listProductCards.get(0).category.name} category</h1>
 
     <table class="tg">
         <tr>
