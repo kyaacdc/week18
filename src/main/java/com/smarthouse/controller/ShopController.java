@@ -6,33 +6,19 @@ import com.smarthouse.repository.AttributeValueRepository;
 import com.smarthouse.repository.ProductCardRepository;
 import com.smarthouse.service.ShopManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import javax.persistence.RollbackException;
-import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
-@Scope("session")
 public class ShopController {
 
     private ShopManager shopManager;
     private ProductCardRepository productCardRepository;
     private AttributeValueRepository attributeValueRepository;
-
-    @Autowired
-    private HttpSession httpSession;
 
     @Autowired
     public void setShopManager(ShopManager shopManager) {
@@ -49,59 +35,10 @@ public class ShopController {
         this.attributeValueRepository = attributeValueRepository;
     }
 
-    @RequestMapping(value = "/oneClickBuy", method = RequestMethod.POST)
-    public String oneClickBuy(@RequestParam(value = "email") String email,
-                              @RequestParam(value = "sku") String sku,
-                              @RequestParam(value = "name") String name,
-                              @RequestParam(value = "phone") String phone,
-                              @RequestParam(value = "address") String address,
-                              @RequestParam(value = "amount", defaultValue = "1") int amount,
-                              Model model) {
-
-        try {
-            shopManager.createOrder(email, name, phone, address, amount, sku);
-        } catch (ValidationException e){
-            model.addAttribute("wrongEmail", "Email not valid.");
-            return showProductCard(sku, model);
-        } catch (Exception e) {
-            model.addAttribute("email", email);
-            model.addAttribute("wrongName", "Name should consist only of letters.");
-            model.addAttribute("wrongPhone", "Name should consist only of digits.");
-            return showProductCard(sku, model);
-        }
-        shopManager.submitOrder(email);
-
-        model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("listAllCategories", shopManager.getAllCategories());
-        model.addAttribute("success", true);
-
-        return "categories";
-    }
-
-    @RequestMapping(value = "/changeRate", method = RequestMethod.POST)
-    public String changeRate(@RequestParam(value = "rate") int rate,
-                             @RequestParam(value = "sku") String sku,
-                             @RequestParam(value = "isLike") boolean isLike,
-                              Model model) {
-
-        ProductCard productCard = productCardRepository.findOne(sku);
-
-        if(isLike)
-            productCard.setLikes(productCard.getLikes() + rate);
-        else
-            productCard.setDislikes(productCard.getDislikes() + rate);
-
-        productCardRepository.save(productCard);
-
-        return showProductCard(sku, model);
-    }
-
     @RequestMapping(value = {"/", "/index", "/home", "/categories"}, method = RequestMethod.GET)
     public String showRootCategories(Model model) {
-
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
         model.addAttribute("listAllCategories", shopManager.getAllCategories());
-        model.addAttribute("httpSessionId", httpSession.getId());
 
         return "categories";
     }
@@ -109,23 +46,20 @@ public class ShopController {
     @RequestMapping(value = {"/subcategories/{id}", "/subcategories"}, method = RequestMethod.GET)
     public String showSubcategories(@PathVariable(value = "id", required = false) Integer id, Model model) {
 
-        List<Category> allCategories = shopManager.getAllCategories();
-
-        List<Integer> listId = allCategories.stream().map(Category::getId).collect(Collectors.toList());
-
-        if (id == null || id <= 0 || !listId.contains(id))
+        if (id == null)
             return showRootCategories(model);
 
         List<Category> subCategories = shopManager.getSubCategories(id);
 
-        if(subCategories.size() > 0) {
+        List<ProductCard> productCardsByCategory = shopManager.getProductCardsByCategory(id);
+
+        if (subCategories.size() > 0) {
             model.addAttribute("listSubCategories", subCategories);
-            model.addAttribute("listAllCategories", allCategories);
+            model.addAttribute("listAllCategories", shopManager.getAllCategories());
             model.addAttribute("listAllProductCards", productCardRepository.findAll());
             return "categories";
-        }
-        else {
-            model.addAttribute("listProductCards", shopManager.getProductCardsByCategory(id));
+        } else {
+            model.addAttribute("listProductCards", productCardsByCategory);
             return "categories";
         }
     }
@@ -136,19 +70,13 @@ public class ShopController {
                     String sku,
             Model model) {
 
-        List<String> listSku = ((List<ProductCard>) productCardRepository.findAll()).stream()
-                .map(ProductCard::getSku).collect(Collectors.toList());
+        ProductCard productCard = productCardRepository.findOne(sku);
 
-        if(listSku.contains(sku)) {
-            ProductCard productCard = productCardRepository.findOne(sku);
-            model.addAttribute("productCard", productCard);
-            model.addAttribute("listAttributeValues", attributeValueRepository.findByProductCard(productCard));
-            model.addAttribute("listVisualisations", shopManager.getVisualListByProduct(productCard.getSku()));
-            model.addAttribute("httpSessionId", httpSession.getId());
+        model.addAttribute("productCard", productCard);
+        model.addAttribute("listAttributeValues", attributeValueRepository.findByProductCard(productCard));
+        model.addAttribute("listVisualisations", shopManager.getVisualListByProduct(productCard.getSku()));
 
-            return "productCard";
-        } else
-            return "redirect:/categories";
+        return "productCard";
     }
 
     // TODO: 04.04.17
