@@ -1,11 +1,12 @@
-package com.smarthouse.controller;
+package com.smarthouse.seleniumSimple;
 
 import java.util.concurrent.TimeUnit;
 
 import com.smarthouse.pojo.Category;
+import com.smarthouse.pojo.ProductCard;
 import com.smarthouse.repository.CategoryRepository;
+import com.smarthouse.repository.ProductCardRepository;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,8 +19,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -29,10 +28,13 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "server.port=8080", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class SimpleSeleniumTest {
+public class HomePageSimpleSeleniumTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductCardRepository productCardRepository;
 
     private static final long TIMEOUT = 30; // seconds
     private WebDriver driver;
@@ -44,7 +46,10 @@ public class SimpleSeleniumTest {
 
     @Before
     public void setupTest() {
-        categoryRepository.save(new Category("desc", "name", null));
+
+        Category category = categoryRepository.save(new Category("desc", "name", null));
+        productCardRepository.save(new ProductCard("1-1", "name", 123, 321, 5, 6, "desc", category));
+
         driver = new ChromeDriver();
 
         //Always wait TIMEOUT seconds
@@ -59,6 +64,7 @@ public class SimpleSeleniumTest {
         if (driver != null) {
             driver.quit();
         }
+        productCardRepository.deleteAll();
         categoryRepository.deleteAll();
     }
 
@@ -84,8 +90,6 @@ public class SimpleSeleniumTest {
 
         WebElement element = driver.findElement(By.linkText("name"));
 
-        element.getTagName();
-
         // Click on link
         driver.findElement(By.linkText("name")).click();
 
@@ -93,8 +97,6 @@ public class SimpleSeleniumTest {
         assertTrue(ExpectedConditions
                 .textToBePresentInElementLocated(By.tagName("body"), "Product")
                 .apply(driver));
-        assertTrue(ExpectedConditions.titleContains("Product").apply(driver));
-
 
         // Click on link
         driver.findElement(By.linkText("Back to Homepage")).click();

@@ -1,0 +1,1 @@
+SELECT category, sum(likes)  SUMMA FROM product_card GROUP BY category HAVING category >4 ORDER BY SUMMA DESC LIMIT 3;
