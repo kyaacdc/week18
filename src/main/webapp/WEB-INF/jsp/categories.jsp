@@ -52,6 +52,8 @@
 </head>
 <body>
 
+<div align="right"><a href="/showBasket">Go to Basket</a></div>
+
 <c:if test="${!empty listRootCategories}">
 
     <c:if test="${success}">
@@ -59,7 +61,12 @@
         <h1>You can continue shopping</h1>
     </c:if>
 
-    <c:if test="${!success}">
+    <c:if test="${isAddedToBasket}">
+        <h1>Choiced product is added to basket</h1>
+        <h1>You can continue shopping</h1>
+    </c:if>
+
+    <c:if test="${!success && !isAddedToBasket}">
         <h1>Welcome into Internet Shop "Smart House"</h1>
     </c:if>
 
@@ -69,7 +76,6 @@
             <th width="200">Name</th>
             <th width="500">Description</th>
             <th width="500">Subcategories</th>
-            <th width="40">SessionId</th>
         </tr>
 
         <c:forEach items="${listRootCategories}" var="category">
@@ -86,7 +92,6 @@
                         </c:if>
                     </c:forEach>
                 </td>
-                <td>${httpSessionId}</td>
             </tr>
         </c:forEach>
     </table>

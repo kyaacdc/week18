@@ -69,7 +69,7 @@
         <th width="80">Category</th>
         <th width="20">Attributes</th>
         <th width="200">Visualisation</th>
-        <th width="20">SessionId</th>
+        <th width="20">Basket</th>
 
     </tr>
 
@@ -135,7 +135,27 @@
                 </c:forEach>
             </c:if>
         </td>
-        <td>${httpSessionId}</td>
+        <td>
+            <form action="/addToBasket" method="POST">
+                <input type="hidden" name="sku" value=${productCard.sku}>
+                <input type="hidden" name="name" value=${productCard.name}>
+                <label>
+                    <select name=amount size=1>
+                        <option value=1 selected>1</option>
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=5>5</option>
+                        <option value=6>6</option>
+                        <option value=7>7</option>
+                        <option value=8>8</option>
+                        <option value=9>9</option>
+                        <option value=10>10</option>
+                    </select>
+                </label>
+                <p><input type="submit" value="Add To Basket"></p>
+            </form>
+        </td>
     </tr>
 </table>
 
