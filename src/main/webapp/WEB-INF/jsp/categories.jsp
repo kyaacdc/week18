@@ -54,7 +54,14 @@
 
 <c:if test="${!empty listRootCategories}">
 
-    <h1>Welcome into Internet Shop "Smart House"</h1>
+    <c:if test="${success}">
+        <h1>Thanks for your choice. Our operator will contact you as soon as possible</h1>
+        <h1>You can continue shopping</h1>
+    </c:if>
+
+    <c:if test="${!success}">
+        <h1>Welcome into Internet Shop "Smart House"</h1>
+    </c:if>
 
     <table class="tg">
         <tr>
@@ -62,6 +69,7 @@
             <th width="200">Name</th>
             <th width="500">Description</th>
             <th width="500">Subcategories</th>
+            <th width="40">SessionId</th>
         </tr>
 
         <c:forEach items="${listRootCategories}" var="category">
@@ -78,6 +86,7 @@
                         </c:if>
                     </c:forEach>
                 </td>
+                <td>${httpSessionId}</td>
             </tr>
         </c:forEach>
     </table>
