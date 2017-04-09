@@ -1,9 +1,11 @@
 package com.smarthouse.controller;
 
-import com.smarthouse.pojo.Basket;
+import com.smarthouse.pojo.AttributeValue;
+import com.smarthouse.pojo.Cart;
 import com.smarthouse.pojo.Category;
 import com.smarthouse.pojo.ProductCard;
 import com.smarthouse.repository.AttributeValueRepository;
+import com.smarthouse.repository.CategoryRepository;
 import com.smarthouse.repository.ProductCardRepository;
 import com.smarthouse.service.ShopManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -27,10 +29,10 @@ import java.util.stream.Collectors;
 public class ShopController {
 
     private ShopManager shopManager;
+    private CategoryRepository categoryRepository;
     private ProductCardRepository productCardRepository;
-    private AttributeValueRepository attributeValueRepository;
 
-    private List<Basket> basketList = new ArrayList<>();
+    private List<Cart> cartList = new ArrayList<>();
 
     @Autowired
     public void setShopManager(ShopManager shopManager) {
@@ -38,13 +40,13 @@ public class ShopController {
     }
 
     @Autowired
-    public void setProductCardRepository(ProductCardRepository productCardRepository) {
-        this.productCardRepository = productCardRepository;
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     @Autowired
-    public void setAttributeValueRepository(AttributeValueRepository attributeValueRepository) {
-        this.attributeValueRepository = attributeValueRepository;
+    public void setProductCardRepository(ProductCardRepository productCardRepository) {
+        this.productCardRepository = productCardRepository;
     }
 
     @RequestMapping(value = "/oneClickBuy", method = RequestMethod.POST)
@@ -64,38 +66,43 @@ public class ShopController {
         } catch (Exception e) {
             model.addAttribute("email", email);
             model.addAttribute("wrongName", "Name should consist only of letters.");
-            model.addAttribute("wrongPhone", "Name should consist only of digits.");
+            model.addAttribute("wrongPhone", "Phone number should consist only of digits.");
             return showProductCard(sku, model);
         }
         shopManager.submitOrder(email);
 
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("listAllCategories", shopManager.getAllCategories());
+        model.addAttribute("cartSize", cartList.size());
         model.addAttribute("success", true);
 
         return "categories";
     }
 
-    @RequestMapping(value = "/addToBasket", method = RequestMethod.POST)
-    public String addToBasket(@RequestParam(value = "sku") String sku,
-                              @RequestParam(value = "name") String name,
-                              @RequestParam(value = "amount", defaultValue = "1") int amount,
-                              Model model) {
+    @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
+    public String addToCart(@RequestParam(value = "sku") String sku,
+                            @RequestParam(value = "name") String name,
+                            @RequestParam(value = "amount", defaultValue = "1") int amount,
+                            Model model) {
 
-        basketList.add(new Basket(sku, name, amount));
+        cartList.add(new Cart(sku, name, amount));
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("listAllCategories", shopManager.getAllCategories());
-        model.addAttribute("isAddedToBasket", true);
+        model.addAttribute("cartSize", cartList.size());
+        model.addAttribute("isAddedToCart", true);
 
         return "categories";
     }
 
-    @RequestMapping(value = "/showBasket", method = RequestMethod.GET)
-    public String showBasket (Model model) {
+    @RequestMapping(value = "/showCart", method = RequestMethod.GET)
+    public String showCart(Model model) {
 
-        model.addAttribute("listBasket", basketList);
-
-        return "basket";
+        if (cartList.size() != 0) {
+            model.addAttribute("listCart", cartList);
+            model.addAttribute("isCartEmpty", false);
+            return "cart";
+        } else {
+            model.addAttribute("isCartEmpty", true);
+            return showRootCategories(model);
+        }
     }
 
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
@@ -105,15 +112,26 @@ public class ShopController {
                       @RequestParam(value = "address") String address,
                       Model model) {
 
-        for(Basket b: basketList)
-            shopManager.createOrder(email, name, phone, address, b.getAmount(), b.getSku());
+        for (Cart b : cartList) {
+            try {
+                shopManager.createOrder(email, name, phone, address, b.getAmount(), b.getSku());
+            } catch (ValidationException e) {
+                model.addAttribute("wrongEmail", "Email not valid.");
+                return showCart(model);
+            } catch (Exception e) {
+                model.addAttribute("email", email);
+                model.addAttribute("wrongName", "Name should consist only of letters.");
+                model.addAttribute("wrongPhone", "Phone number should consist only of digits.");
+                return showCart(model);
+            }
+        }
 
-        basketList.clear();
+        cartList.clear();
 
         shopManager.submitOrder(email);
 
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("listAllCategories", shopManager.getAllCategories());
+        model.addAttribute("cartSize", cartList.size());
         model.addAttribute("success", true);
 
         return "categories";
@@ -141,55 +159,80 @@ public class ShopController {
     public String showRootCategories(Model model) {
 
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("listAllCategories", shopManager.getAllCategories());
+        model.addAttribute("cartSize", cartList.size());
 
         return "categories";
     }
 
     @RequestMapping(value = {"/subcategories/{id}", "/subcategories"}, method = RequestMethod.GET)
-    public String showSubcategories(@PathVariable(value = "id", required = false) Integer id, Model model) {
+    public String showSubcategories(@PathVariable(value = "id", required = false) String idStr, Model model) {
 
-        List<Category> allCategories = shopManager.getAllCategories();
+        if (idStr == null)
+            return "redirect:/categories";
 
-        List<Integer> listId = allCategories.stream().map(Category::getId).collect(Collectors.toList());
+        String[] split = idStr.split("@");
 
-        if (id == null || id <= 0 || !listId.contains(id))
+        Integer id = Integer.parseInt(split[0]);
+
+        Category category = categoryRepository.findOne(id);
+
+        if (id <= 0 || category == null)
             return showRootCategories(model);
+
+        int cartSize = cartList.size();
 
         List<Category> subCategories = shopManager.getSubCategories(id);
 
         if (subCategories.size() > 0) {
             model.addAttribute("listSubCategories", subCategories);
-            model.addAttribute("listAllCategories", allCategories);
-            model.addAttribute("listAllProductCards", productCardRepository.findAll());
+            model.addAttribute("cartSize", cartSize);
+
             return "categories";
         } else {
-            model.addAttribute("listProductCards", shopManager.getProductCardsByCategory(id));
+            model.addAttribute("listProduct", shopManager.getProductCardsByCategory(id));
+            model.addAttribute("cartSize", cartSize);
             return "categories";
         }
     }
 
-    @RequestMapping("/productCard/{sku}")
+    @RequestMapping("/product/{sku}")
     public String showProductCard(
             @PathVariable(value = "sku")
-                    String sku,
+                    String skuStr,
             Model model) {
 
-        List<String> listSku = ((List<ProductCard>) productCardRepository.findAll()).stream()
-                .map(ProductCard::getSku).collect(Collectors.toList());
+        String[] split = skuStr.split("@");
+        String sku = split[0];
 
-        if (listSku.contains(sku)) {
-            ProductCard productCard = productCardRepository.findOne(sku);
-            model.addAttribute("productCard", productCard);
-            model.addAttribute("listAttributeValues", attributeValueRepository.findByProductCard(productCard));
-            model.addAttribute("listVisualisations", shopManager.getVisualListByProduct(productCard.getSku()));
+        ProductCard productCard = productCardRepository.findOne(sku);
 
-            return "productCard";
+        if (productCard != null) {
+            model.addAttribute("product", productCard);
+            model.addAttribute("cartSize", cartList.size());
+            model.addAttribute("listVisualisations", shopManager.getVisualListByProduct(sku));
+
+            return "product";
         } else
             return "redirect:/categories";
     }
 
-    // TODO: 04.04.17
+    @RequestMapping("/showAttributes/{sku}")
+    public String showAttributes(
+            @PathVariable(value = "sku")
+                    String sku,
+            Model model) {
+
+        List<AttributeValue> attrValuesByProduct = shopManager.getAttrValuesByProduct(sku);
+        if(attrValuesByProduct.size() > 0) {
+            model.addAttribute("attributeList", attrValuesByProduct);
+            model.addAttribute("isAttributesNotPresent", false);
+        } else model.addAttribute("isAttributesNotPresent", true);
+
+        return showProductCard(sku, model);
+    }
+
+
+
 /*
     @RequestMapping("/showProductCardsByCategory")
     public String showProductCardsByCategory(

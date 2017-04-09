@@ -1,15 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%--@elvariable id="productCard" type="com.smarthouse.pojo.ProductCard"--%>
+<%--@elvariable id="product" type="com.smarthouse.pojo.ProductCard"--%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ page session="false" %>
 
 
-
-
 <html>
 <head>
-    <title>Product Card</title>
+    <title>Product</title>
 
     <style type="text/css">
         .tg {
@@ -53,9 +51,11 @@
 </head>
 <body>
 
+<div align="right">(${cartSize}) <a href="/showCart">Go to Cart</a></div>
+
 <a href="/home">Back to Homepage</a>
 
-<h1>Product card ${productCard.name}</h1>
+<h1>Product${productCard.name}</h1>
 
 <table class="tg">
     <tr>
@@ -66,21 +66,21 @@
         <th width="20">Amount</th>
         <th width="20">Likes</th>
         <th width="20">Dislikes</th>
-        <th width="80">Category</th>
-        <th width="20">Attributes</th>
+        <th width="30">Category</th>
+        <th width="80">Attributes</th>
         <th width="200">Visualisation</th>
-        <th width="20">Basket</th>
+        <th width="20">Cart</th>
 
     </tr>
 
 
     <tr>
-        <td>${productCard.sku}</td>
-        <td>${productCard.name}</td>
-        <td>${productCard.productDescription}</td>
-        <td>${productCard.price}</td>
-        <td>${productCard.amount}</td>
-        <td>${productCard.likes}
+        <td>${product.sku}</td>
+        <td>${product.name}</td>
+        <td>${product.productDescription}</td>
+        <td>${product.price}</td>
+        <td>${product.amount}</td>
+        <td>${product.likes}
             <form action="/changeRate" method="POST">
                 <p>
                     <label>
@@ -93,12 +93,12 @@
                         </select>
                     </label>
                 </p>
-                <input type="hidden" name="sku" value=${productCard.sku}>
+                <input type="hidden" name="sku" value=${product.sku}>
                 <input type="hidden" name="isLike" value=true>
                 <p><input type="submit" value="Like"></p>
             </form>
         </td>
-        <td>${productCard.dislikes}
+        <td>${product.dislikes}
             <form action="/changeRate" method="POST">
                 <p>
                     <label>
@@ -111,34 +111,28 @@
                         </select>
                     </label>
                 </p>
-                <input type="hidden" name="sku" value=${productCard.sku}>
+                <input type="hidden" name="sku" value=${product.sku}>
                 <input type="hidden" name="isLike" value=false>
                 <p><input type="submit" value="Dislike"></p>
             </form>
         </td>
-        <td>${productCard.category.name}</td>
+        <td>${product.category.name}</td>
         <td>
-            <c:if test="${!empty listAttributeValues}">
-                <c:forEach items="${listAttributeValues}" var="attribute">
-                    <c:if test="${attribute.productCard.sku == productCard.sku}">
-                        ${attribute.attributeName.name} - ${attribute.value}<br>
-                    </c:if>
-                </c:forEach>
-            </c:if>
+            <a href="<c:url value='/showAttributes/${product.sku}'/>">Show Attribute Table</a>
         </td>
         <td>
             <c:if test="${!empty listVisualisations}">
                 <c:forEach items="${listVisualisations}" var="visualisation">
-                    <c:if test="${visualisation.productCard.sku == productCard.sku}">
+                    <c:if test="${visualisation.productCard.sku == product.sku}">
                         <img src="${visualisation.url}"/>
                     </c:if>
                 </c:forEach>
             </c:if>
         </td>
         <td>
-            <form action="/addToBasket" method="POST">
-                <input type="hidden" name="sku" value=${productCard.sku}>
-                <input type="hidden" name="name" value=${productCard.name}>
+            <form action="/addToCart" method="POST">
+                <input type="hidden" name="sku" value=${product.sku}>
+                <input type="hidden" name="name" value=${product.name}>
                 <label>
                     <select name=amount size=1>
                         <option value=1 selected>1</option>
@@ -153,18 +147,39 @@
                         <option value=10>10</option>
                     </select>
                 </label>
-                <p><input type="submit" value="Add To Basket"></p>
+                <p><input type="submit" value="Add To Cart"></p>
             </form>
         </td>
     </tr>
 </table>
 
+<c:if test="${isAttributesNotPresent}">
+    <h3>This Product not have any attributes</h3>
+</c:if>
+
+<c:if test="${!empty attributeList}">
+    <h3>Attribute Table</h3>
+
+    <table class="tg">
+        <tr>
+            <th width="200">Name</th>
+            <th width="800">Value</th>
+        </tr>
+        <c:forEach items="${attributeList}" var="attribute">
+            <tr>
+                <td>${attribute.attributeName.name}</td>
+                <td>${attribute.value}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
+
 <form method="POST" action="/oneClickBuy">
     <h2>One click Buy</h2>
-    <input name="email" type="text" placeholder="email" value=${email}>*${wrongEmail}<br>
-    <input name="name" type="text" placeholder="name">${wrongName}<br>
-    <input name="phone" type="text" placeholder="phone">${wrongPhone}<br>
-    <input name="address" type="text" placeholder="address"><br>
+    Email <input name="email" type="text" placeholder="email" value=${email}> * ${wrongEmail}<br>
+    Name <input name="name" type="text" placeholder="name"> ${wrongName}<br>
+    Phone <input name="phone" type="text" placeholder="phone"> ${wrongPhone}<br>
+    Address <input name="address" type="text" placeholder="address"><br>
     <label>Amount
         <select name=amount size=1>
             <option value=1 selected>1</option>
@@ -179,13 +194,13 @@
             <option value=10>10</option>
         </select>
     </label><br>
-    <input name="sku" type="hidden" value=${productCard.sku}>
+    <input name="sku" type="hidden" value=${product.sku}>
     <button type="submit">Buy</button>
 </form>
 
 <br><br><br><br><br><br>
 
-<h6>@ Designed by Yuriy Kozheurov</h6>
+<h6>@ Designed by Yuriy Kozheurov, 2017</h6>
 
 </body>
 </html>

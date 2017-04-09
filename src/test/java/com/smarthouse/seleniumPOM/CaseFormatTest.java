@@ -9,6 +9,6 @@ public class CaseFormatTest {
     @Test
     public void convertsCamelCaseToLowerUnderscore() {
         assertThat(CaseFormat.toLowerUnderscore("HomePageControllerTest"))
-                .isEqualTo("home_controller_test");
+                .isEqualTo("home_page_controller_test");
     }
 }
