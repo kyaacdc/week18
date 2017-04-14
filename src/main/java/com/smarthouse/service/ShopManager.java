@@ -5,6 +5,7 @@ import com.smarthouse.pojo.*;
 import com.smarthouse.service.util.validators.EmailValidator;
 import com.smarthouse.service.util.enums.EnumProductSorter;
 import com.smarthouse.service.util.enums.EnumSearcher;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -105,17 +106,40 @@ public class ShopManager {
 
         if (!emailValidator.validate(email))
             throw new ValidationException("Email not valid");
-
         if (!isRequiredAmountOfProductCardAvailable(sku, amount))
             throw new NoResultException("This amount of products not exist on our warehouse");
 
-        ProductCard productCard = productCardRepository.findOne(sku);
-        int totalPrice = productCard.getPrice() * amount;
-        Customer customer = new Customer(email, name, true, phone);
-        customer = customerRepository.save(customer);
-        OrderMain orderMain = new OrderMain(address, 1, customer);
-        orderMain = orderMainRepository.save(orderMain);
-        orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
+        OrderMain orderMain;
+
+        if(customerRepository.findOne(email) == null) {
+            Customer customer = new Customer(email, name, true, phone);
+            customer = customerRepository.save(customer);
+            orderMain = new OrderMain(address, 1, customer);
+            orderMain = orderMainRepository.save(orderMain);
+            ProductCard productCard = productCardRepository.findOne(sku);
+            int totalPrice = productCard.getPrice() * amount;
+            orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
+        }
+        else if (orderMainRepository.findByCustomer(customerRepository.findOne(email)).get((orderMainRepository.findByCustomer(customerRepository.findOne(email)).size() - 1)).getStatus() == 2){
+            Customer customer = customerRepository.findOne(email);
+            customer.setName(name);
+            customer.setPhone(phone);
+            customer = customerRepository.save(customer);
+            //List<OrderMain> orderMainList = orderMainRepository.findByCustomer(customer);
+            orderMain = new OrderMain(address, 1, customer);
+            orderMain = orderMainRepository.save(orderMain);
+            ProductCard productCard = productCardRepository.findOne(sku);
+            int totalPrice = productCard.getPrice() * amount;
+            orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
+        }
+
+        else {
+            ProductCard productCard = productCardRepository.findOne(sku);
+            int totalPrice = productCard.getPrice() * amount;
+            orderMain = orderMainRepository.findByCustomer(customerRepository.findOne(email)).get((orderMainRepository.findByCustomer(customerRepository.findOne(email)).size() - 1));
+            orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
+        }
+
         return orderMain;
     }
 

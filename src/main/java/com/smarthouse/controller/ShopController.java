@@ -23,10 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
 public class ShopController {
+
+    private int cartSize;
+    private int totalPrice;
 
     private ShopManager shopManager;
     private CategoryRepository categoryRepository;
@@ -59,7 +63,29 @@ public class ShopController {
                               Model model) {
 
         try {
-            shopManager.createOrder(email, name, phone, address, amount, sku);
+
+            if (cartSize == 0) {
+
+                shopManager.createOrder(email, name, phone, address, amount, sku);
+
+                shopManager.submitOrder(email);
+
+                model.addAttribute("listRootCategories", shopManager.getRootCategories());
+                model.addAttribute("success", true);
+                model.addAttribute("orderId", shopManager.getOrdersByCustomer(email).get(shopManager.getOrdersByCustomer(email).size() - 1).getOrderId());
+                model.addAttribute("cartSize", cartSize);
+                model.addAttribute("totalPrice", totalPrice);
+
+                return "categories";
+            } else {
+                cartList.add(new Cart(sku, productCardRepository.findOne(sku).getName(), amount, productCardRepository.findOne(sku).getPrice()));
+                cartSize = cartList.stream().map(Cart::getAmount).reduce((x, y) -> x + y).orElse(0);
+                totalPrice = cartList.stream().map(Cart::getPrice).reduce((x, y) -> x + y).orElse(0);
+                model.addAttribute("cartSize", cartSize);
+                model.addAttribute("totalPrice", totalPrice);
+                model.addAttribute("email", email);
+                return showCart(model);
+            }
         } catch (ValidationException e) {
             model.addAttribute("wrongEmail", "Email not valid.");
             return showProductCard(sku, model);
@@ -69,27 +95,33 @@ public class ShopController {
             model.addAttribute("wrongPhone", "Phone number should consist only of digits.");
             return showProductCard(sku, model);
         }
-        shopManager.submitOrder(email);
-
-        model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("cartSize", cartList.size());
-        model.addAttribute("success", true);
-
-        return "categories";
     }
 
     @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
     public String addToCart(@RequestParam(value = "sku") String sku,
                             @RequestParam(value = "name") String name,
                             @RequestParam(value = "amount", defaultValue = "1") int amount,
+                            @RequestParam(value = "price") int price,
                             Model model) {
 
-        cartList.add(new Cart(sku, name, amount));
+        cartList.add(new Cart(sku, name, amount, price * amount));
+        cartSize = cartList.stream().map(Cart::getAmount).reduce((x, y) -> x + y).orElse(0);
+        totalPrice = cartList.stream().map(Cart::getPrice).reduce((x, y) -> x + y).orElse(0);
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("cartSize", cartList.size());
+        model.addAttribute("cartSize", cartSize);
+        model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("isAddedToCart", true);
 
         return "categories";
+    }
+
+    @RequestMapping(value = "/removeFromCart", method = RequestMethod.POST)
+    public String removeFromCart(@RequestParam(value = "index") int index, Model model) {
+
+        cartList.remove(index);
+        cartSize = cartList.stream().map(Cart::getAmount).reduce((x, y) -> x + y).orElse(0);
+        totalPrice = cartList.stream().map(Cart::getPrice).reduce((x, y) -> x + y).orElse(0);
+        return showCart(model);
     }
 
     @RequestMapping(value = "/showCart", method = RequestMethod.GET)
@@ -97,6 +129,8 @@ public class ShopController {
 
         if (cartList.size() != 0) {
             model.addAttribute("listCart", cartList);
+            model.addAttribute("cartSize", cartSize);
+            model.addAttribute("totalPrice", totalPrice);
             model.addAttribute("isCartEmpty", false);
             return "cart";
         } else {
@@ -128,10 +162,15 @@ public class ShopController {
 
         cartList.clear();
 
+        cartSize = 0;
+        totalPrice = 0;
+
         shopManager.submitOrder(email);
 
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("cartSize", cartList.size());
+        model.addAttribute("cartSize", cartSize);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("orderId", shopManager.getOrdersByCustomer(email).get(shopManager.getOrdersByCustomer(email).size() - 1).getOrderId());
         model.addAttribute("success", true);
 
         return "categories";
@@ -159,7 +198,8 @@ public class ShopController {
     public String showRootCategories(Model model) {
 
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
-        model.addAttribute("cartSize", cartList.size());
+        model.addAttribute("cartSize", cartSize);
+        model.addAttribute("totalPrice", totalPrice);
 
         return "categories";
     }
@@ -179,27 +219,26 @@ public class ShopController {
         if (id <= 0 || category == null)
             return showRootCategories(model);
 
-        int cartSize = cartList.size();
-
         List<Category> subCategories = shopManager.getSubCategories(id);
 
-        if (subCategories.size() > 0) {
-            model.addAttribute("listSubCategories", subCategories);
-            model.addAttribute("cartSize", cartSize);
+        model.addAttribute("cartSize", cartSize);
+        model.addAttribute("totalPrice", totalPrice);
 
-            return "categories";
-        } else {
+        if (subCategories.size() > 0)
+            model.addAttribute("listSubCategories", subCategories);
+        else
             model.addAttribute("listProduct", shopManager.getProductCardsByCategory(id));
-            model.addAttribute("cartSize", cartSize);
-            return "categories";
-        }
+
+        return "categories";
     }
 
-    @RequestMapping("/product/{sku}")
+    @RequestMapping(value = {"/product/{sku}", "/product"}, method = RequestMethod.GET)
     public String showProductCard(
-            @PathVariable(value = "sku")
-                    String skuStr,
+            @PathVariable(value = "sku", required = false) String skuStr,
             Model model) {
+
+        if (skuStr == null)
+            return "redirect:/categories";
 
         String[] split = skuStr.split("@");
         String sku = split[0];
@@ -208,7 +247,8 @@ public class ShopController {
 
         if (productCard != null) {
             model.addAttribute("product", productCard);
-            model.addAttribute("cartSize", cartList.size());
+            model.addAttribute("cartSize", cartSize);
+            model.addAttribute("totalPrice", totalPrice);
             model.addAttribute("listVisualisations", shopManager.getVisualListByProduct(sku));
 
             return "product";
@@ -216,14 +256,14 @@ public class ShopController {
             return "redirect:/categories";
     }
 
-    @RequestMapping("/showAttributes/{sku}")
+    @RequestMapping(value = "/showAttributes/{sku}", method = RequestMethod.GET)
     public String showAttributes(
             @PathVariable(value = "sku")
                     String sku,
             Model model) {
 
         List<AttributeValue> attrValuesByProduct = shopManager.getAttrValuesByProduct(sku);
-        if(attrValuesByProduct.size() > 0) {
+        if (attrValuesByProduct.size() > 0) {
             model.addAttribute("attributeList", attrValuesByProduct);
             model.addAttribute("isAttributesNotPresent", false);
         } else model.addAttribute("isAttributesNotPresent", true);

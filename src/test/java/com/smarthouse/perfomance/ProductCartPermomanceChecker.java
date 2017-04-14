@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @SpringBootTest(classes = WebApplication.class)
 public class ProductCartPermomanceChecker {
 
+    private int magic = 500;
+
     @Autowired
     CategoryRepository categoryRepository;
 
@@ -33,14 +35,14 @@ public class ProductCartPermomanceChecker {
 
         Category category = categoryRepository.save(new Category("desc", "name", null));
 
-        for(int i = 0; i < 5000; i++)
+        for(int i = 0; i < magic; i++)
             productCardRepository.save(new ProductCard(("" + i), "name", 123, 321, 5, 6, "desc", category));
 
-        String sku = "5500";
+        String sku = "2500";
 
         String response = "";
 
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < magic; i++) {
             List<String> listSku = ((List<ProductCard>) productCardRepository.findAll()).stream()
                     .map(ProductCard::getSku).collect(Collectors.toList());
             if (listSku.contains(sku)) {
@@ -50,7 +52,7 @@ public class ProductCartPermomanceChecker {
         }
 
         long start = System.nanoTime();
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < magic; i++) {
             List<String> listSku = ((List<ProductCard>) productCardRepository.findAll()).stream()
                     .map(ProductCard::getSku).collect(Collectors.toList());
             if (listSku.contains(sku)) {
@@ -60,13 +62,13 @@ public class ProductCartPermomanceChecker {
         }
         long stop = System.nanoTime() - start;
 
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < magic; i++) {
             if (productCardRepository.findOne(sku) != null)
                 response = "product";
         }
 
         start = System.nanoTime();
-        for(int i = 0; i < 5000; i++) {
+        for(int i = 0; i < magic; i++) {
             if (productCardRepository.findOne(sku) != null)
                 response = "product";
         }

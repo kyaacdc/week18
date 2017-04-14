@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "server.port=8080", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@SeleniumTest(driver = ChromeDriver.class, baseUrl = "http://localhost:8080/productCard/1-1")
+@SeleniumTest(driver = ChromeDriver.class, baseUrl = "http://localhost:8080/product/1-1")
 public class ProductCardControllerTest {
 
     @Autowired
@@ -35,7 +35,7 @@ public class ProductCardControllerTest {
 
     private ProductCardPage productCardPage;
 
-    private static final long TIMEOUT = 30; // seconds
+    private static final long TIMEOUT = 10; // seconds
 
     @BeforeClass
     public static void setupClass() {
@@ -52,7 +52,7 @@ public class ProductCardControllerTest {
         driver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
 
         //Open system under test
-       driver.get("http://localhost:8080/productCard/1-1");
+       driver.get("http://localhost:8080/product/1-1");
 
         productCardPage = PageFactory.initElements(driver, ProductCardPage.class);
     }
@@ -67,7 +67,7 @@ public class ProductCardControllerTest {
     //Tests with use Page Object model pattern
     @Test
     public void containsCorrectTitle() {
-        assertThat(productCardPage.getTitle(), is(equalTo("Product Card")));
+        assertThat(productCardPage.getTitle(), is(equalTo("Product")));
     }
 
     @Test
@@ -86,6 +86,6 @@ public class ProductCardControllerTest {
 
     @Test
     public void shouldCheckIsUrlCorrect(){
-        assertThat(productCardPage.getUrl(), is(equalTo("http://localhost:8080/productCard/1-1")));
+        assertThat(productCardPage.getUrl(), is(equalTo("http://localhost:8080/product/1-1")));
     }
 }
