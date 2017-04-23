@@ -5,6 +5,8 @@ import com.smarthouse.pojo.*;
 import com.smarthouse.service.util.validators.EmailValidator;
 import com.smarthouse.service.util.enums.EnumProductSorter;
 import com.smarthouse.service.util.enums.EnumSearcher;
+import com.smarthouse.service.util.validators.Name;
+import com.smarthouse.service.util.validators.Phone;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -14,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -120,12 +120,15 @@ public class ShopManager {
             int totalPrice = productCard.getPrice() * amount;
             orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
         }
-        else if (orderMainRepository.findByCustomer(customerRepository.findOne(email)).get((orderMainRepository.findByCustomer(customerRepository.findOne(email)).size() - 1)).getStatus() == 2){
+        else if (orderMainRepository
+                .findByCustomer(customerRepository
+                        .findOne(email)).get((orderMainRepository
+                        .findByCustomer(customerRepository.findOne(email)).size() - 1)).getStatus() == 2)
+        {
             Customer customer = customerRepository.findOne(email);
             customer.setName(name);
             customer.setPhone(phone);
             customer = customerRepository.save(customer);
-            //List<OrderMain> orderMainList = orderMainRepository.findByCustomer(customer);
             orderMain = new OrderMain(address, 1, customer);
             orderMain = orderMainRepository.save(orderMain);
             ProductCard productCard = productCardRepository.findOne(sku);
@@ -136,7 +139,12 @@ public class ShopManager {
         else {
             ProductCard productCard = productCardRepository.findOne(sku);
             int totalPrice = productCard.getPrice() * amount;
-            orderMain = orderMainRepository.findByCustomer(customerRepository.findOne(email)).get((orderMainRepository.findByCustomer(customerRepository.findOne(email)).size() - 1));
+
+            LinkedList<OrderMain> orderMainLinkedList =
+                    new LinkedList<>(orderMainRepository.findByCustomer(customerRepository.findOne(email)));
+
+            orderMain = orderMainLinkedList.getLast();
+
             orderItemRepository.save(new OrderItem(amount, totalPrice, productCard, orderMain));
         }
 
@@ -261,15 +269,43 @@ public class ShopManager {
                 sort = new Sort(new Sort.Order(ASC, "price")); break;
             case SORT_BY_HIGH_PRICE:
                 sort = new Sort(new Sort.Order(DESC, "price")); break;
-            case SORT_BY_POPULARITY:
+            case SORT_BY_POPULARITY_REVERSED:
                 sort = new Sort(new Sort.Order(ASC, "likes")); break;
-            case SORT_BY_UNPOPULARITY:
+            case SORT_BY_POPULARITY:
+                sort = new Sort(new Sort.Order(DESC, "likes")); break;
+            case SORT_BY_UNPOPULARITY_REVERSED:
                 sort = new Sort(new Sort.Order(ASC, "dislikes")); break;
+            case SORT_BY_UNPOPULARITY:
+                sort = new Sort(new Sort.Order(DESC, "dislikes")); break;
             default:
                 throw new NoResultException();
         }
 
         return categoryId == 0 ? productCardRepository.findAllBy(sort) : productCardRepository.findByCategory(category, sort);
+    }
+
+    public List<ProductCard> sortSearchResultsBy(List<ProductCard> list, EnumProductSorter sortCriteria) {
+
+        switch (sortCriteria) {
+            case SORT_BY_NAME:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getName)).collect(Collectors.toList());
+            case SORT_BY_NAME_REVERSED:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getName).reversed()).collect(Collectors.toList());
+            case SORT_BY_LOW_PRICE:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getPrice)).collect(Collectors.toList());
+            case SORT_BY_HIGH_PRICE:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getPrice).reversed()).collect(Collectors.toList());
+            case SORT_BY_POPULARITY_REVERSED:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getLikes).reversed()).collect(Collectors.toList());
+            case SORT_BY_POPULARITY:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getLikes)).collect(Collectors.toList());
+            case SORT_BY_UNPOPULARITY_REVERSED:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getDislikes).reversed()).collect(Collectors.toList());
+            case SORT_BY_UNPOPULARITY:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getDislikes)).collect(Collectors.toList());
+            default:
+                throw new NoResultException();
+        }
     }
 
 // Methods for getting lists of various items

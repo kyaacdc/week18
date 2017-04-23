@@ -483,7 +483,7 @@ public class ShopManagerTest {
         productCardRepository.save(productCard);
 
         List<ProductCard> productCards = shopManager.sortProductCardBy(0, SORT_BY_POPULARITY);
-        assertThat(productCards.get(3).getLikes(), is(equalTo(4)));
+        assertThat(productCards.get(3).getLikes(), is(equalTo(1)));
         for(ProductCard p: productCards)
             assertThat(p.getLikes(), oneOf(1,2,3,4));
     }
@@ -508,7 +508,7 @@ public class ShopManagerTest {
         productCardRepository.save(productCard);
 
         List<ProductCard> productCards = shopManager.sortProductCardBy(category.getId(), SORT_BY_POPULARITY);
-        assertThat(productCards.get(2).getLikes(), is(equalTo(3)));
+        assertThat(productCards.get(2).getLikes(), is(equalTo(1)));
         for(ProductCard p: productCards)
             assertThat(p.getLikes(), oneOf(1,2,3));
     }
@@ -558,7 +558,7 @@ public class ShopManagerTest {
         productCardRepository.save(productCard);
 
         List<ProductCard> productCards = shopManager.sortProductCardBy(category.getId(), SORT_BY_UNPOPULARITY);
-        assertThat(productCards.get(2).getDislikes(), is(equalTo(3)));
+        assertThat(productCards.get(2).getDislikes(), is(equalTo(1)));
         for(ProductCard p: productCards)
             assertThat(p.getDislikes(), oneOf(1,2,3));
     }

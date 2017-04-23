@@ -45,7 +45,9 @@
                 <th width="60">Name</th>
                 <th width="60">Amount</th>
                 <th width="60">Total Price</th>
-                <th width="60">Remove</th>
+                <th width="60">
+                    <a href="/clearCart">Clear Cart</a>
+                </th>
             </tr>
 
             <c:forEach items="${listCart}" var="cart">

@@ -23,7 +23,8 @@
                 <a href="/home" style="float:left">Back to Homepage</a>
             </c:if>
             <div align="right">
-                Total amount - (${cartSize}) Total price - (${totalPrice}) <a href="/showCart"><abbr title="Cart with your products">Go to Cart</abbr></a>
+                Total amount - (${cartSize}) Total price - (${totalPrice}) <a href="/showCart"><abbr
+                    title="Cart with your products">Go to Cart</abbr></a>
             </div>
         </div>
     </div>
@@ -32,9 +33,38 @@
 
 <!-- HEADER -->
 <header class="header">
+    <div>
+        <form action="/findProducts" name="Search By:">
+            <table class="tg" name="Search By:">
+                <tr>
+                    <td width="120">
+                        <select name=findOption size=1>
+                            <option value=FIND_ALL selected>Search in all places</option>
+                            <option value=FIND_IN_NAME>Search in products names</option>
+                            <option value=FIND_IN_PROD_DESC>Search in products descriptions</option>
+                            <option value=FIND_IN_CATEGORY_NAME>Search in categories names</option>
+                            <option value=FIND_IN_CATEGORY_DESC>Search in categories descriptions</option>
+                        </select>
+                    </td>
+                    <td width="120">
+                        <input type="text" title="searchValue" name="searchValue"
+                               placeholder="Please input SEARCH value"/>
+                    </td>
+                    <td width="120">
+                        <input type="submit" value="Search">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div class="container">
         <c:if test="${isCartEmpty}">
             <h1>Your Cart is Empty</h1>
+            <h2>But you can continue shopping</h2>
+        </c:if>
+
+        <c:if test="${isProductNotFound || isNotFound}">
+            <h1>Sorry, but products not found</h1>
             <h2>But you can continue shopping</h2>
         </c:if>
 
@@ -55,11 +85,23 @@
             <h1>SubCategories of ${listSubCategories.get(0).category.name}</h1>
         </c:if>
 
-        <c:if test="${!empty listProduct}">
+        <c:if test="${!empty listProduct && isFoundListEmpty}">
             <h1>Products from ${listProduct.get(0).category.name} category</h1>
         </c:if>
 
-        <c:if test="${!success && !isAddedToCart && !isCartEmpty && (empty listProduct) && (empty listSubCategories)}">
+        <c:if test="${!empty listProduct && !isFoundListEmpty}">
+            <h1>Search results</h1>
+        </c:if>
+
+        <c:if test="${!empty noProductExist}">
+            <h1>${noProductExist}</h1>
+        </c:if>
+
+        <c:if test="${!empty undefinedError}">
+            <h1>${undefinedError}</h1>
+        </c:if>
+
+        <c:if test="${!isNotFound && !success && !isAddedToCart && !isCartEmpty && (empty listProduct) && (empty listSubCategories) && (empty noProductExist) && (empty undefinedError)}">
             <h1>
                 Welcome to Internet Shop "Smart House"
             </h1>
@@ -116,12 +158,60 @@
             <table class="tg">
                 <tr>
                     <th width="20">SKU</th>
-                    <th width="80">Name</th>
+                    <th width="80">
+                        <form action="/sortProductCardBy">
+                            <input type="hidden" name="categoryId" value=${categoryId}>
+                            <c:if test="${isSorted}">
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_NAME>
+                            </c:if>
+                            <c:if test="${!isSorted}">
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_NAME_REVERSED>
+                            </c:if>
+                            <input type="submit" value="Name"/>
+                        </form>
+                    </th>
                     <th width="200">Description</th>
-                    <th width="20">Price</th>
+                    <th width="20">
+                        <form action="/sortProductCardBy">
+                            <input type="hidden" name="categoryId" value=${categoryId}>
+                            <c:if test="${isSorted}">
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_LOW_PRICE>
+                            </c:if>
+                            <c:if test="${!isSorted}">
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_HIGH_PRICE>
+                            </c:if>
+                            <input type="submit" value="Price"/>
+                        </form>
+                    </th>
                     <th width="20">Amount</th>
-                    <th width="20">Likes</th>
-                    <th width="20">Dislikes</th>
+                    <th width="20">
+                        <form action="/sortProductCardBy">
+                            <c:if test="${!isSorted}">
+                                <input type="hidden" name="categoryId" value=${categoryId}>
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_POPULARITY>
+                                <input type="submit" value="Like"/>
+                            </c:if>
+                            <c:if test="${isSorted}">
+                                <input type="hidden" name="categoryId" value=${categoryId}>
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_POPULARITY_REVERSED>
+                                <input type="submit" value="Like"/>
+                            </c:if>
+                        </form>
+                    </th>
+                    <th width="20">
+                        <form action="/sortProductCardBy">
+                            <c:if test="${!isSorted}">
+                                <input type="hidden" name="categoryId" value=${categoryId}>
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_UNPOPULARITY>
+                                <input type="submit" value="Dislike"/>
+                            </c:if>
+                            <c:if test="${isSorted}">
+                                <input type="hidden" name="categoryId" value=${categoryId}>
+                                <input type="hidden" name="sortCriteria" value=SORT_BY_UNPOPULARITY_REVERSED>
+                                <input type="submit" value="Dislike"/>
+                            </c:if>
+                        </form>
+                    </th>
                 </tr>
 
                 <c:forEach items="${listProduct}" var="product">

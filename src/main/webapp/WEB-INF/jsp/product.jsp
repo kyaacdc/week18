@@ -20,7 +20,7 @@
         <div>
             <a href="/home" style="float:left">Back to Homepage</a>
             <div align="right">
-                Total amount - (${cartSize}) Total price - (${totalPrice})
+                Total amount - (${cartSize}) Total price - (${totalPrice}) <a href="/showCart"><abbr title="Cart with your products">Go to Cart</abbr></a>
             </div>
         </div>
     </div>
@@ -62,44 +62,31 @@
                 <td>${product.price}</td>
                 <td>${product.amount}</td>
                 <td>${product.likes}
-                    <form action="/changeRate" method="POST">
-                        <p>
-                            <label>
-                                <select name=rate size=1>
-                                    <option value=1 selected>1</option>
-                                    <option value=2>2</option>
-                                    <option value=3>3</option>
-                                    <option value=4>4</option>
-                                    <option value=5>5</option>
-                                </select>
-                            </label>
-                        </p>
-                        <input type="hidden" name="sku" value=${product.sku}>
-                        <input type="hidden" name="isLike" value=true>
-                        <p><input type="submit" value="Like"></p>
-                    </form>
+                    <c:if test="${!isLikePushed}">
+                        <form action="/changeRate" method="POST">
+                            <input type="hidden" name="sku" value=${product.sku}>
+                            <input type="hidden" name="isLike" value=true>
+                            <p><input type="submit" value="Like"></p>
+                        </form>
+                    </c:if>
                 </td>
                 <td>${product.dislikes}
-                    <form action="/changeRate" method="POST">
-                        <p>
-                            <label>
-                                <select name=rate size=1>
-                                    <option value=1 selected>1</option>
-                                    <option value=2>2</option>
-                                    <option value=3>3</option>
-                                    <option value=4>4</option>
-                                    <option value=5>5</option>
-                                </select>
-                            </label>
-                        </p>
-                        <input type="hidden" name="sku" value=${product.sku}>
-                        <input type="hidden" name="isLike" value=false>
-                        <p><input type="submit" value="Dislike"></p>
-                    </form>
+                    <c:if test="${!isDislikePushed}">
+                        <form action="/changeRate" method="POST">
+                            <input type="hidden" name="sku" value=${product.sku}>
+                            <input type="hidden" name="isLike" value=false>
+                            <p><input type="submit" value="Dislike"></p>
+                        </form>
+                    </c:if>
                 </td>
                 <td>${product.category.name}</td>
                 <td>
+                    <c:if test="${!isShowAttribute}">
                     <a href="<c:url value='/showAttributes/${product.sku}'/>">Show Attribute Table</a>
+                    </c:if>
+                    <c:if test="${isShowAttribute}">
+                    <a href="<c:url value='/hideAttributes/${product.sku}'/>">Hide Attribute Table</a>
+                    </c:if>
                 </td>
                 <td>
                     <c:if test="${!empty listVisualisations}">
