@@ -32,12 +32,12 @@ dependencies {
     compile group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2'
     compile group: 'jdom', name: 'jdom', version: '1.1'
     compile("org.springframework.boot:spring-boot-starter-web")
-    runtime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.12'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-    runtime(group: 'org.postgresql', name: 'postgresql', version: '9.4.1208')
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile (group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '1.6.1')
+    runtime("org.springframework.boot:spring-boot-starter-tomcat")
+    runtime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.12'
+    runtime(group: 'org.postgresql', name: 'postgresql', version: '9.4.1208')
     //testCompile (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.3.1')
     testCompile (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.1')
     testCompile("org.springframework.boot:spring-boot-starter-test")

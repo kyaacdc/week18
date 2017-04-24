@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 import java.util.*;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -197,7 +198,9 @@ public class ShopManager {
      * @param criteria String is  a string for the find
      * @return Set<ProductCard> type with found set of products
      */
-    public Set<ProductCard> findAllProductsByCriteria(@RequestParam(value="criteria") String criteria) {
+    //public Set<ProductCard> findAllProductsByCriteria(@RequestParam(value="criteria") String criteria) {
+    public Set<ProductCard> findAllProductsByCriteria(String criteria) {
+
         Set<ProductCard> result = new LinkedHashSet<>();
 
         ProductCard productCard = productCardRepository.findOne(criteria);
@@ -216,6 +219,19 @@ public class ShopManager {
         result.addAll(getProductsByCategoryName(criteria));
 
         return result;
+    }
+
+    public Set<ProductCard> findAllIncludeText(String criteria) {
+
+        String finalCriteria = criteria.toLowerCase();
+
+        return ((List<ProductCard>) productCardRepository.findAll()).stream()
+                .filter(a -> a.getName().toLowerCase().contains(finalCriteria) ||
+                        a.getProductDescription().toLowerCase().contains(finalCriteria) ||
+                        a.getCategory().getName().toLowerCase().contains(finalCriteria) ||
+                        a.getCategory().getDescription().toLowerCase().contains(finalCriteria))
+                .sorted(Comparator.comparing(ProductCard::getName).reversed())
+                .collect(Collectors.toSet());
     }
 
     /**

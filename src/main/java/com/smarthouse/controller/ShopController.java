@@ -18,6 +18,7 @@ import javax.validation.ValidationException;
 import java.util.*;
 
 import static com.smarthouse.service.util.enums.EnumSearcher.FIND_ALL;
+import static com.smarthouse.service.util.enums.EnumSearcher.FIND_IN_ALL_PLACES;
 
 @Controller
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
@@ -422,6 +423,10 @@ public class ShopController {
                                @RequestParam(value = "searchValue") String searchValue,
                                     Model model) {
         if(findBy == FIND_ALL) {
+            Set<ProductCard> allProductsByCriteria = shopManager.findAllIncludeText(searchValue);
+            foundProducts = new ArrayList<>(allProductsByCriteria);
+            model.addAttribute("listProduct", foundProducts);
+        } else if(findBy == FIND_IN_ALL_PLACES) {
             Set<ProductCard> allProductsByCriteria = shopManager.findAllProductsByCriteria(searchValue);
             foundProducts = new ArrayList<>(allProductsByCriteria);
             model.addAttribute("listProduct", foundProducts);

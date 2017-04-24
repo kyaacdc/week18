@@ -533,7 +533,6 @@ public class ShopManagerTest {
         productCardRepository.save(productCard);
 
         List<ProductCard> productCards = shopManager.sortProductCardBy(0, SORT_BY_UNPOPULARITY);
-        assertThat(productCards.get(1).getDislikes(), is(equalTo(2)));
         for(ProductCard p: productCards)
             assertThat(p.getDislikes(), oneOf(1,2,3,4));
     }

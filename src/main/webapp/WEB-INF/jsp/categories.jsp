@@ -39,7 +39,8 @@
                 <tr>
                     <td width="120">
                         <select name=findOption size=1>
-                            <option value=FIND_ALL selected>Search in all places</option>
+                            <option value=FIND_ALL selected>Search all match (case ignored)</option>
+                            <option value=FIND_IN_ALL_PLACES>Search in all places (exactly)</option>
                             <option value=FIND_IN_NAME>Search in products names</option>
                             <option value=FIND_IN_PROD_DESC>Search in products descriptions</option>
                             <option value=FIND_IN_CATEGORY_NAME>Search in categories names</option>
