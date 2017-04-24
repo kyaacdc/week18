@@ -1,5 +1,6 @@
 package com.smarthouse.seleniumPOM.pom;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -21,6 +22,13 @@ public class ProductCardPage {
         this.driver = driver;
     }
 
+    public void addToCart(String productName) {
+        WebElement btnAdd = driver.findElement(
+                By.xpath("//td[contains(text(),'" + productName + "')]/following-sibling::td[9]//form//p//input")
+        );
+        btnAdd.click();
+    }
+
     public String getTitle() {
         return driver.getTitle();
     }
@@ -28,8 +36,6 @@ public class ProductCardPage {
     public String getUrl() {
         return driver.getCurrentUrl();
     }
-
-
 
     public List<WebElement> getBodyWords() {
         return bodyWords;
