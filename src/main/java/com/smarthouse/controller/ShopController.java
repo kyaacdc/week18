@@ -99,6 +99,8 @@ public class ShopController {
                 model.addAttribute("cartSize", cartSize);
                 model.addAttribute("totalPrice", totalPrice);
 
+                shopManager.sendMail(email, "Thanks for your order. Your order ID is - " + orderId);
+
                 return "categories";
 
             } else {
@@ -210,11 +212,15 @@ public class ShopController {
         LinkedList<OrderMain> orderMainLinkedList =
                 new LinkedList<>(shopManager.getOrdersByCustomer(email));
 
+        int orderId = orderMainLinkedList.getLast().getOrderId();
+
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
         model.addAttribute("cartSize", cartSize);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("orderId", orderMainLinkedList.getLast().getOrderId());
+        model.addAttribute("orderId", orderId);
         model.addAttribute("success", true);
+
+        shopManager.sendMail(email, "Thanks for your order. Your order ID is - " + orderId);
 
         return "categories";
     }

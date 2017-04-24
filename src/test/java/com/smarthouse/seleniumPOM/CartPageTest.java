@@ -34,6 +34,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Created by tkaczenko on 15.04.17.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "server.port=8080", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @SeleniumTest(driver = ChromeDriver.class, baseUrl = "http://localhost:8080/showCart")

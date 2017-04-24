@@ -5,19 +5,16 @@ import com.smarthouse.pojo.*;
 import com.smarthouse.service.util.validators.EmailValidator;
 import com.smarthouse.service.util.enums.EnumProductSorter;
 import com.smarthouse.service.util.enums.EnumSearcher;
-import com.smarthouse.service.util.validators.Name;
-import com.smarthouse.service.util.validators.Phone;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 import java.util.*;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -185,9 +182,9 @@ public class ShopManager {
                 om.setStatus(2);
                 resultList.add(orderMainRepository.save(om));
             }
+
             return resultList;
         }
-
         throw new NoResultException("Error of submit order");
     }
 
@@ -405,6 +402,58 @@ public class ShopManager {
             }
         }
         return isExist;
+    }
+
+    public void sendMail (String to, String mess){
+
+            // Sender's email ID needs to be mentioned
+            String from = "kozheurovyuriy@gmail.com";
+            final String username = "kozheurovyuriy";//change accordingly
+            final String password = "43046721a";//change accordingly
+
+            // Assuming you are sending email through relay.jangosmtp.net
+            String host = "smtp.gmail.com";
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", host);
+            props.put("mail.smtp.port", "587");
+
+            // Get the Session object.
+            Session session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            try {
+                // Create a default MimeMessage object.
+                Message message = new MimeMessage(session);
+
+                // Set From: header field of the header.
+                message.setFrom(new InternetAddress(from));
+
+                // Set To: header field of the header.
+                message.setRecipients(Message.RecipientType.TO,
+                        InternetAddress.parse(to));
+
+                // Set Subject: header field
+                message.setSubject("Testing Subject");
+
+                // Now set the actual message
+                message.setText(mess);
+
+                // Send message
+                Transport.send(message);
+
+                System.out.println("Sent message successfully....");
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+
     }
 
     //Private helpful methods

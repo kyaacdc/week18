@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+/**
+ * Created by tkaczenko on 15.04.17.
+ */
 public class CartPage {
     private final WebDriver driver;
 
