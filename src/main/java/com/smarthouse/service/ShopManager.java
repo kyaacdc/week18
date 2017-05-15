@@ -290,6 +290,10 @@ public class ShopManager {
                 sort = new Sort(new Sort.Order(ASC, "dislikes")); break;
             case SORT_BY_UNPOPULARITY:
                 sort = new Sort(new Sort.Order(DESC, "dislikes")); break;
+            case SORT_BY_AMOUNT_REVERSED:
+                sort = new Sort(new Sort.Order(ASC, "amount")); break;
+            case SORT_BY_AMOUNT:
+                sort = new Sort(new Sort.Order(DESC, "amount")); break;
             default:
                 throw new NoResultException();
         }
@@ -316,6 +320,10 @@ public class ShopManager {
                 return list.stream().sorted(Comparator.comparing(ProductCard::getDislikes).reversed()).collect(Collectors.toList());
             case SORT_BY_UNPOPULARITY:
                 return list.stream().sorted(Comparator.comparing(ProductCard::getDislikes)).collect(Collectors.toList());
+            case SORT_BY_AMOUNT_REVERSED:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getAmount).reversed()).collect(Collectors.toList());
+            case SORT_BY_AMOUNT:
+                return list.stream().sorted(Comparator.comparing(ProductCard::getAmount)).collect(Collectors.toList());
             default:
                 throw new NoResultException();
         }
@@ -331,9 +339,17 @@ public class ShopManager {
         return categoryRepository.findByCategory(null);
     }
 
+    public Category getCategoryById(int id){return categoryRepository.findOne(id);}
+
     public List<Category> getSubCategories(int categoryId) {
-        return categoryRepository.findByCategory(categoryRepository.findOne(categoryId));
+        return categoryRepository.findByCategory(getCategoryById(categoryId));
     }
+
+    public ProductCard getProductCardBySku(String sku){return productCardRepository.findOne(sku);}
+
+    public void saveProductCard(ProductCard productCard){productCardRepository.save(productCard);}
+
+    public List<ProductCard> getAllProductCards(){return (List<ProductCard>) productCardRepository.findAll();}
 
     public List<ProductCard> getProductCardsByCategory(int categoryId) {
         Sort sort = new Sort(new Sort.Order(ASC, "name"));
@@ -343,6 +359,12 @@ public class ShopManager {
     public List<Visualization> getVisualListByProduct(String productCardId) {
             return visualizationRepository.findByProductCard(productCardRepository.findOne(productCardId));
     }
+
+    public List<Visualization> getVisualListByType(int type) {
+        return visualizationRepository.findByType(type);
+    }
+
+    public Visualization getVisualisationById(int id){return visualizationRepository.findOne(id);}
 
     public List<AttributeValue> getAttrValuesByProduct(String productCardId) {
         return attributeValueRepository.findByProductCard(productCardRepository.findOne(productCardId));

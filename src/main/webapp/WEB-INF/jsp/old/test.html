@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<a href="#" data-toggle="tooltip" title="Що ти тут очікував побачити?">Наведи курсор</a>
+
+<a href="#" data-toggle="tooltip" data-placement="top" title="підказка!">підказка</a>
+<a href="#" data-toggle="tooltip" data-placement="bottom" title="підказка!">підказка</a>
+<a href="#" data-toggle="tooltip" data-placement="left" title="підказка!">підказка</a>
+<a href="#" data-toggle="tooltip" data-placement="right" title="підказка!">підказка</a>
+
+<button class="btn btn-info" data-toggle="collapse" data-target="#hide-me">Collapse Bootstrap.js</button>
+<div id="hide-me" class="collapse in">
+    Анонимус — посетители анонимных борд, которые почти все являются анонимами.
+</div>
+
+<div class="panel-group" id="collapse-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#collapse-group" href="#el1">Первый элемент</a>
+            </h4>
+        </div>
+        <div id="el1" class="panel-collapse collapse in">
+            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#collapse-group" href="#el2">Второй элемент</a>
+            </h4>
+        </div>
+        <div id="el2" class="panel-collapse collapse">
+            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#collapse-group" href="#el3">Третий элемент</a>
+            </h4>
+        </div>
+        <div id="el3" class="panel-collapse collapse">
+            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+        </div>
+    </div>
+</div>
+
+
+<button class="btn btn-info btn-lg" type="button" data-toggle="modal" data-target="#myModal">Показать всплывающее окно</button>
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><button class="close" type="button" data-dismiss="modal">×</button>
+                <h4 class="modal-title">Заголовок окна</h4>
+            </div>
+            <div class="modal-body">Текст уведомления</div>
+            <div class="modal-footer"><button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button></div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <!-- Навигация -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Домой</a></li>
+        <li><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Профиль</a></li>
+        <li><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Сообщения</a></li>
+        <li><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Настройки</a></li>
+    </ul>
+    <!-- Содержимое вкладок -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home">...</div>
+        <div role="tabpanel" class="tab-pane" id="profile">...</div>
+        <div role="tabpanel" class="tab-pane" id="messages">...</div>
+        <div role="tabpanel" class="tab-pane" id="settings">...</div>
+    </div>
+</div>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="home">...</div>
+    <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
+    <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
+    <div role="tabpanel" class="tab-pane fade" id="settings">...</div>
+</div>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Выпадающий список
+    </button>
+    <ul class="dropdown-menu  dropdown-menu-right">
+        <li class="dropdown-header">Заголовок 1</li>
+        <li><a href="#">HTML</a></li>
+        <li><a href="#">CSS</a></li>
+        <li><a href="#">JavaScript</a></li>
+        <li class="disabled"><a href="#">Архив уроков</a></li>
+    </ul>
+</div>
+
+<span class="glyphicon glyphicon-shopping-cart"></span>
+
+<button class="btn btn-success">
+    <i class="glyphicon glyphicon-eye-close"></i> Скрыть плохие новости
+</button>
+
+<div class="panel panel-default">
+    <div class="panel-body">Текст</div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Заголовок</div>
+    <div class="panel-body">Текст</div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">Текст</div>
+    <div class="panel-footer">Подвал</div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">Заголовок</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Заголовок</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Заголовок</div>
+        <div class="panel-body">Текст</div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">Панель с классом panel-default</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">Панель с классом panel-primary</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">Панель с классом panel-success</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">Панель с классом panel-info</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-warning">
+        <div class="panel-heading">Панель с классом panel-warning</div>
+        <div class="panel-body">Текст</div>
+    </div>
+    <div class="panel panel-danger">
+        <div class="panel-heading">Панель с классом panel-danger</div>
+        <div class="panel-body">Текст</div>
+    </div>
+</div>
+
+<a href="#">Входящие <span class="badge">42</span></a>
+
+<img src="http://s45.radikal.ru/i107/1704/55/82202dfb319d.jpg" class="img-thumbnail" alt="Отзывчивое изображение в Bootstrap">
+<img src="http://s45.radikal.ru/i107/1704/55/82202dfb319d.jpg" class="img-rounded" alt="Отзывчивое изображение в Bootstrap">
+<img src="http://s45.radikal.ru/i107/1704/55/82202dfb319d.jpg" class="img-circle" alt="Отзывчивое изображение в Bootstrap">
+<img src="http://s45.radikal.ru/i107/1704/55/82202dfb319d.jpg" class="img-responsive" alt="Отзывчивое изображение в Bootstrap">
+
+
+
+<button type="button" class="btn btn-default">Кнопка</button>
+<button type="button" class="btn btn-primary">Основная</button>
+<button type="button" class="btn btn-success">Успех</button>
+<button type="button" class="btn btn-info">Информация</button>
+<button type="button" class="btn btn-warning">Внимание</button>
+<button type="button" class="btn btn-danger">Ошибка</button>
+<button type="button" class="btn btn-link">Ссылка</button>
+
+<a class="btn btn-default" href="#" role="button">Кнопка</a>
+<button class="btn btn-default" type="submit">Кнопка</button>
+<input class="btn btn-default" type="button" value="Кнопка">
+
+<button type="button" class="btn btn-primary btn-lg">Большая</button>
+<button type="button" class="btn btn-primary btn-md">Средняя</button>
+<button type="button" class="btn btn-primary btn-sm">Маленькая</button>
+<button type="button" class="btn btn-primary btn-xs">Еще меньше</button>
+
+<button type="button" class="btn btn-primary btn-lg btn-block">Блочная кнопка</button>
+<button type="button" class="btn btn-default btn-lg btn-block">Блочная кнопка</button>
+
+<div class="row">
+    <div class="col-sm-4">Первая колонка</div>
+    <div class="col-sm-4">Вторая колонка</div>
+    <div class="col-sm-4">Третья колонка</div>
+</div>
+
+<p class="text-left">Равнение по левому краю</p>
+<p class="text-center">Текст по центру</p>
+<p class="text-right">Равнение по правому краю</p>
+<p class="text-justify">Равнение по обоим краям</p>
+<p class="text-nowrap">Текст без переносов</p>
+
+<blockquote>
+    Целый год между нами происходило что-то вроде интеллектуальной близости. С оттенком вражды и разврата
+    <footer>Сергей Довлатов</footer>
+</blockquote>
+
+<blockquote class="blockquote-reverse">
+    Целый год между нами происходило что-то вроде интеллектуальной близости. С оттенком вражды и разврата
+    <footer>Сергей Довлатов</footer>
+</blockquote>
+
+<p class="text-lowercase">нижний регистр</p>
+<p class="text-uppercase">верхний регистр</p>
+<p class="text-capitalize">заглавные буквы</p>
+
+<dl>
+    <dt>Beatles</dt>
+    <dd>- Liverpool, Great Britain</dd>
+    <dt>Bon Jovi</dt>
+    <dd>- New Jersey, USA</dd>
+</dl>
+
+<p class="text-muted">Грусть-печаль-тоска.</p>
+<p class="text-primary">Важный текст.</p>
+<p class="text-success">Хорошо там, где?</p>
+<p class="text-info">Иногда вы едите тигра, а иногда тигр есть вас.</p>
+<p class="text-warning">В Польше есть памятник Википедии.</p>
+<p class="text-danger">Мы найдем вас и сделаем счастливыми.</p>
+
+<div class="h1">Заголовок <mark>марк</mark><small>пояснительный текст</small></div>
+
+<ul class="pagination">
+    <li><a href="#">&laquo;</a></li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+    <li><a href="#">&raquo;</a></li>
+</ul>
+
+<div class="alert alert-success" role="alert">Вы успешно дочитали до этого места</div>
+<div class="alert alert-info" role="alert">Это ещё не конец статьи</div>
+<div class="alert alert-warning" role="alert">Читать мало, нужно всё применять на практике</div>
+<div class="alert alert-danger" role="alert">Да, это не смешно</div>
+
+<div class="row">
+    <div class="col-sm-5 col-md-6">.col-sm-5 .col-md-6</div>
+    <div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0"> .col-sm-5 .col-sm-offset-2 .col-md-6
+        .col-md-offset-0
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">.col-sm-4</div>
+    <div class="col-sm-4">.col-sm-4</div>
+    <div class="col-sm-4">.col-sm-4</div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">.col-sm-4</div>
+    <div class="col-sm-8">.col-sm-8</div>
+</div>
+
+<div class="row">
+    <div class="col-sm-8">
+        .col-sm-8
+        <div class="row">
+            <div class="col-sm-6">.col-sm-6</div>
+            <div class="col-sm-6">.col-sm-6</div>
+        </div>
+    </div>
+    <div class="col-sm-4">.col-sm-4</div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-6">111</div>
+    <div class="col-sm-12 col-md-4 col-lg-6">222</div>
+</div>
+
+<div class="checkbox">
+    <label>
+        <input type="checkbox" value="check1">
+        Обычный чекбокс, который можно отметить
+    </label>
+</div>
+
+<form role="form">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Введите email">
+        <p class="help-block">Пример строки с подсказкой</p>
+    </div>
+    <div class="form-group">
+        <label for="pass">Пароль</label>
+        <input type="password" class="form-control" id="pass" placeholder="Пароль">
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox"> Чекбокс</label>
+    </div>
+    <button type="submit" class="btn btn-success">Войти</button>
+</form>
+
+<form role="form" class="form-inline">
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Введите email">
+    </div>
+    <div class="form-group">
+        <label for="pass">Пароль</label>
+        <input type="password" class="form-control" id="pass" placeholder="Пароль">
+    </div>
+    <button type="submit" class="btn btn-success">Войти</button>
+</form>
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="mail" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" id="mail" placeholder="Email">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pass" class="col-sm-2 control-label">Пароль</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="pass" placeholder="Пароль">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> Запомнить меня
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success">Подтвердить</button>
+        </div>
+    </div>
+</form>
+
+<div class="checkbox disabled">
+    <label>
+        <input type="checkbox" value="check2" disabled>
+        Заблокированный чекбокс, не отмечается
+    </label>
+</div>
+
+
+<div class="radio">
+    <label>
+        <input type="radio" name="optionsRadios" id="radio1" value="option1" checked>
+        Первый элемент списка из радиокнопок, её можно выбирать
+    </label>
+</div>
+<div class="radio">
+    <label>
+        <input type="radio" name="optionsRadios" id="radio22" value="option2" disabled>
+        Вторая опция списка, заблокированная
+    </label>
+</div>
+<div class="radio disabled">
+    <label>
+        <input type="radio" name="optionsRadios" id="radio3" value="option3">
+        Третья смешная опция
+    </label>
+</div>
+
+<label class="checkbox-inline">
+    <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+</label>
+<label class="checkbox-inline">
+    <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
+</label>
+<label class="checkbox-inline">
+    <input type="checkbox" id="inlineCheckbox3" value="option3"> 3
+</label>
+
+<label class="radio-inline">
+    <input type="radio" name="inlineRadioOptions" id="radio1" value="option1"> 1
+</label>
+<label class="radio-inline">
+    <input type="radio" name="inlineRadioOptions" id="radio2" value="option2"> 2
+</label>
+<label class="radio-inline">
+    <input type="radio" name="inlineRadioOptions" id="radio3" value="option3"> 3
+</label>
+
+
+<select class="form-control">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+</select>
+
+<select class="form-control" multiple>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+</select>
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Электропочта</label>
+        <div class="col-sm-10">
+            <p class="form-control-static">email@example.com</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="pass" class="col-sm-2 control-label">Пароль</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="pass" placeholder="Пароль">
+        </div>
+    </div>
+</form>
+
+<div class="form-group has-success">
+    <label class="control-label" for="succ">Поле без ошибок</label>
+    <input type="text" class="form-control" id="succ">
+</div>
+<div class="form-group has-warning">
+    <label class="control-label" for="warn">Поле с предупреждением</label>
+    <input type="text" class="form-control" id="warn">
+</div>
+<div class="form-group has-error">
+    <label class="control-label" for="err">Поле с ошибкой</label>
+    <input type="text" class="form-control" id="err">
+</div>
+<div class="has-success">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" id="check-succ" value="option1">
+            Чекбокс без ошибок
+        </label>
+    </div>
+</div>
+<div class="has-warning">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" id="check-warn" value="option1">
+            чекбокс с предупреждением
+        </label>
+    </div>
+</div>
+<div class="has-error">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" id="checkboxError" value="option1">
+            Чекбокс с ошибкой
+        </label>
+    </div>
+</div>
+
+</body>
+</html>

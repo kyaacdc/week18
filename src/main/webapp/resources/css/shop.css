@@ -1,0 +1,73 @@
+.glyphicon {
+    font-size: 80px;
+}
+.glyphicon.glyphicon-small {
+    font-size: 25px;
+}
+.smallProductCard {
+    font-size: xx-large;
+    white-space: nowrap; /* Запрещаем перенос строк */
+    word-wrap: break-word;
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    background: #fffdfd; /* Цвет фона */
+    padding: 5px; /* Поля вокруг текста */
+    text-overflow: ellipsis;
+    border: 3px solid #000; /* Белая рамка */
+    border-radius: 10px; /* Радиус скругления */
+}
+.bigProductCard {
+    font-size: xx-large;
+}
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 17%;
+    height: 14%;
+}
+.btn-md {
+    font-size: 20px;
+    border-radius: 10px;
+    width: 10%;
+    height: 10%;
+}
+.smallProductCard img {
+    display: block;
+    width: 320px;
+    height: 240px !important;
+    margin: 0 auto;
+}
+.bigProductCard img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+.searchForm input, .searchForm select, .countForm select {
+    width: 450px; /* Ширина поля с учетом padding */
+    height: 108px; /* Высота */
+    max-width: 100%;
+    background: #dad7c5 no-repeat; /* Фон */
+    padding: 0 10px; /* Поля */
+    border: none; /* Убираем рамку */
+    font-size: 55pt; /* Размер текста */
+}
+.submitForm input, .submitForm select {
+    width: 850px; /* Ширина поля с учетом padding */
+    height: 108px; /* Высота */
+    max-width: 100%;
+    background: #c3dac4 no-repeat; /* Фон */
+    padding: 0 10px; /* Поля */
+    border: double; /* Убираем рамку */
+    font-size: 35pt; /* Размер текста */
+}
+h1, p, option {
+    text-align: center;
+    font-size: 60px;
+    font-weight: bold;
+    color: green;
+}

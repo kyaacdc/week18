@@ -9,4 +9,6 @@ import java.util.List;
 public interface VisualizationRepository extends PagingAndSortingRepository<Visualization, Integer> {
 
     List<Visualization> findByProductCard(ProductCard productCard);
+    List<Visualization> findByType(int type);
+
 }

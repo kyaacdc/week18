@@ -29,15 +29,15 @@ targetCompatibility = 1.8
 
 dependencies {
 
+    compile "org.springframework.boot:spring-boot-starter-web",
+            "org.springframework.boot:spring-boot-starter-security",
+            "org.springframework.boot:spring-boot-starter-data-jpa"
     compile group: 'javax.mail', name: 'mail', version: '1.4.7'
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile (group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '1.6.1')
     runtime("org.springframework.boot:spring-boot-starter-tomcat")
     runtime group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.12'
+    runtime group: 'javax.servlet', name: 'jstl', version: '1.2'
     runtime(group: 'org.postgresql', name: 'postgresql', version: '9.4.1208')
-    //testCompile (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.3.1')
     testCompile (group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.1')
     testCompile("org.springframework.boot:spring-boot-starter-test")
     compile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
