@@ -1,6 +1,7 @@
 package com.smarthouse.controller;
 
 import com.smarthouse.pojo.*;
+import com.smarthouse.service.AdminManager;
 import com.smarthouse.service.ShopManager;
 import com.smarthouse.service.util.enums.EnumProductSorter;
 import com.smarthouse.service.util.enums.EnumSearcher;
@@ -8,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,17 +26,19 @@ public class AdminController {
     private boolean isSorted = true;
     private List<ProductCard> foundProducts = new ArrayList<>();
     private List<Visualization> listVizualisations = new ArrayList<>();
-    private ShopManager shopManager;
+    private final ShopManager shopManager;
+    private final AdminManager adminManager;
 
     @Autowired
-    public void setShopManager(ShopManager shopManager) {
+    public AdminController(ShopManager shopManager, AdminManager adminManager) {
         this.shopManager = shopManager;
+        this.adminManager = adminManager;
     }
-
 
     @GetMapping(value = {"/admin/categoriesAdmin", "/admin"})
     public String showRootCategories(Model model) {
 
+        model.addAttribute("category", new Category());
         model.addAttribute("listRootCategories", shopManager.getRootCategories());
         model.addAttribute("pathPhotoHomepage", shopManager.getVisualListByType(555).get(0).getUrl());
 
@@ -62,6 +65,7 @@ public class AdminController {
                 .collect(Collectors.toList());
 
         foundProducts.clear();
+        model.addAttribute("category", new Category());
         model.addAttribute("listProduct", productCardsByCategory);
         model.addAttribute("listVizualisations", listVizualisations);
         model.addAttribute("categoryId", id);
@@ -69,6 +73,27 @@ public class AdminController {
         model.addAttribute("listSubCategories", subCategories);
 
         return "/admin/categoriesAdmin";
+    }
+
+    @GetMapping("/admin/categoriesAdmin/edit/{id}")
+    public String editRootCategory(@PathVariable("id") int id, Model model) {
+        model.addAttribute("category", shopManager.getCategoryById(id));
+        model.addAttribute("listRootCategories", shopManager.getRootCategories());
+        return "/admin/categoriesAdmin";
+    }
+
+    @GetMapping("/admin/subcategoriesAdmin/edit/{id}")
+    public String editSubCategory(@PathVariable("id") int id, Model model) {
+        int idParentCategory = shopManager.getCategoryById(id).getCategory().getId();
+        model.addAttribute("category", shopManager.getCategoryById(id));
+        model.addAttribute("listSubCategories", shopManager.getSubCategories(idParentCategory));
+        return "/admin/categoriesAdmin";
+    }
+
+    @PostMapping("/admin/subcategoriesAdmin/add")
+    public String addCategory(@ModelAttribute("category") Category category) {
+        adminManager.addCategory(category);
+        return "redirect:/admin/categoriesAdmin";
     }
 
     @GetMapping(value = {"/admin/productAdmin/{sku}", "/admin/productAdmin"})

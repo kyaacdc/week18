@@ -322,6 +322,14 @@
                     </c:forEach>
                 </c:if>
                 <li>
+                    <a href="/user/cabinet" role="button" data-toggle="tooltip"
+                       title="Go to Private Panel">
+                        <p>
+                            <mark><i>Private Panel</i></mark>
+                        </p>
+                    </a>
+                </li>
+                <li>
                     <a href="/admin/categoriesAdmin" role="button" data-toggle="tooltip"
                        title="Go to Admin Panel">
                         <p>
@@ -450,14 +458,6 @@
                                             </button>
                                         </c:if>
                                     </form>
-                                <li>
-                                    <a href="/admin/categoriesAdmin" role="button" data-toggle="tooltip"
-                                       title="Go to Admin Panel">
-                                        <p>
-                                            <mark><i>Admin Panel</i></mark>
-                                        </p>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -465,6 +465,12 @@
             </div>
         </c:if>
         <c:if test="${empty listProduct}">
+            <a href="/user/cabinet" class="btn btn-info btn-lg" role="button" data-toggle="tooltip"
+               title="Go to Private Panel">
+                <p>
+                    <i class="glyphicon glyphicon-user"></i>
+                </p>
+            </a>
             <a href="/admin/categoriesAdmin" class="btn btn-danger btn-lg" role="button" data-toggle="tooltip"
                title="Go to Admin Panel">
                 <p>
@@ -603,7 +609,8 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="name" value=${product.name}>
                             <input type="hidden" name="price" value=${product.price}>
@@ -626,6 +633,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=true>
                             <button type="submit" class="btn btn-success btn-block"
@@ -637,6 +645,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=false>
                             <button type="submit" class="btn btn-danger btn-block"
@@ -692,7 +701,8 @@
                             </div>
 
                             <div class="col-sm-3">
-                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="name" value=${product.name}>
                                     <input type="hidden" name="price" value=${product.price}>
@@ -715,6 +725,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=true>
                                     <button type="submit" class="btn btn-success btn-block"
@@ -726,6 +737,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=false>
                                     <button type="submit" class="btn btn-danger btn-block"
@@ -789,7 +801,8 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="name" value=${product.name}>
                             <input type="hidden" name="price" value=${product.price}>
@@ -812,6 +825,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=true>
                             <button type="submit" class="btn btn-success btn-block btn-lg"
@@ -823,6 +837,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=false>
                             <button type="submit" class="btn btn-danger btn-block btn-lg"
@@ -854,7 +869,8 @@
                             </div>
 
                             <div class="col-sm-3">
-                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="name" value=${product.name}>
                                     <input type="hidden" name="price" value=${product.price}>
@@ -877,6 +893,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=true>
                                     <button type="submit" class="btn btn-success btn-block btn-lg"
@@ -888,6 +905,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=false>
                                     <button type="submit" class="btn btn-danger btn-block btn-lg"
@@ -941,7 +959,8 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                            <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="name" value=${product.name}>
                                 <input type="hidden" name="price" value=${product.price}>
@@ -964,6 +983,7 @@
                         </div>
                         <div class="col-sm-3">
                             <form action="/changeRate" method="POST">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="isLike" value=true>
                                 <button type="submit" class="btn btn-success btn-block"
@@ -975,6 +995,7 @@
                         </div>
                         <div class="col-sm-3">
                             <form action="/changeRate" method="POST">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="isLike" value=false>
                                 <button type="submit" class="btn btn-danger btn-block"

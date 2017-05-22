@@ -23,63 +23,25 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ShopManager {
 
-    private ProductCardRepository productCardRepository;
-    private CategoryRepository categoryRepository;
-    private CustomerRepository customerRepository;
-    private OrderMainRepository orderMainRepository;
-    private OrderItemRepository orderItemRepository;
-    private VisualizationRepository visualizationRepository;
-    private AttributeValueRepository attributeValueRepository;
-    private AttributeNameRepository attributeNameRepository;
+    private final ProductCardRepository productCardRepository;
+    private final CategoryRepository categoryRepository;
+    private final CustomerRepository customerRepository;
+    private final OrderMainRepository orderMainRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final VisualizationRepository visualizationRepository;
+    private final AttributeValueRepository attributeValueRepository;
+    private final AttributeNameRepository attributeNameRepository;
 
     @Autowired
-    public void setProductCardRepository(ProductCardRepository productCardRepository) {
+    public ShopManager(ProductCardRepository productCardRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, OrderMainRepository orderMainRepository, OrderItemRepository orderItemRepository, VisualizationRepository visualizationRepository, AttributeValueRepository attributeValueRepository, AttributeNameRepository attributeNameRepository) {
         this.productCardRepository = productCardRepository;
-    }
-    @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-    }
-    @Autowired
-    public void setCustomerRepository(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-    }
-    @Autowired
-    public void setOrderMainRepository(OrderMainRepository orderMainRepository) {
         this.orderMainRepository = orderMainRepository;
-    }
-    @Autowired
-    public void setOrderItemRepository(OrderItemRepository orderItemRepository) {
         this.orderItemRepository = orderItemRepository;
-    }
-    @Autowired
-    public void setVisualizationRepository(VisualizationRepository visualizationRepository) {
         this.visualizationRepository = visualizationRepository;
-    }
-    @Autowired
-    public void setAttributeValueRepository(AttributeValueRepository attributeValueRepository) {
         this.attributeValueRepository = attributeValueRepository;
-    }
-
-    @Autowired
-    public void setAttributeNameRepository(AttributeNameRepository attributeNameRepository) {
         this.attributeNameRepository = attributeNameRepository;
-    }
-
-    public ShopManager() {
-    }
-
-    public ShopManager(ProductCardRepository productCardRepository, CategoryRepository categoryRepository,
-                       CustomerRepository customerRepository, OrderMainRepository orderMainRepository,
-                       OrderItemRepository orderItemRepository, VisualizationRepository visualizationRepository,
-                       AttributeValueRepository attributeValueRepository) {
-        this.productCardRepository = productCardRepository;
-        this.categoryRepository = categoryRepository;
-        this.customerRepository = customerRepository;
-        this.orderMainRepository = orderMainRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.visualizationRepository = visualizationRepository;
-        this.attributeValueRepository = attributeValueRepository;
     }
 
     /**

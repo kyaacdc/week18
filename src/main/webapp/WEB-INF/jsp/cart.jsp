@@ -62,6 +62,7 @@
             <td><p>${cart.price}$</p></td>
             <td>
                 <form method="POST" action="/removeFromCart">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <input name="index" type="hidden" value="${listCart.indexOf(cart)}"><br>
                     <button type="submit" class="btn btn-info btn-block btn-xl"><i
                             class="glyphicon glyphicon-remove-sign" title="Remove ${cart.name} from CART"></i></button>
@@ -101,6 +102,7 @@
             </label>
         </div>
     </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <button class="btn btn-success btn-block btn-xl" type="submit"><p>Submit</p></button>
 </form>
 
@@ -143,7 +145,8 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                        <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="name" value=${product.name}>
                             <input type="hidden" name="price" value=${product.price}>
@@ -166,6 +169,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=true>
                             <button type="submit" class="btn btn-success btn-block btn-lg"
@@ -177,6 +181,7 @@
                     </div>
                     <div class="col-sm-3">
                         <form action="/changeRate" method="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             <input type="hidden" name="sku" value=${product.sku}>
                             <input type="hidden" name="isLike" value=false>
                             <button type="submit" class="btn btn-danger btn-block btn-lg"
@@ -208,7 +213,8 @@
                             </div>
 
                             <div class="col-sm-3">
-                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                                <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="name" value=${product.name}>
                                     <input type="hidden" name="price" value=${product.price}>
@@ -231,6 +237,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=true>
                                     <button type="submit" class="btn btn-success btn-block btn-lg"
@@ -242,6 +249,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <form action="/changeRate" method="POST">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="sku" value=${product.sku}>
                                     <input type="hidden" name="isLike" value=false>
                                     <button type="submit" class="btn btn-danger btn-block btn-lg"
@@ -295,7 +303,8 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <form role="form" class="form-inline" action="/addToCart" method="POST" name="Amount:">
+                            <form role="form" class="form-inline" action="/addToCart" method="POST" name="Cart:">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="name" value=${product.name}>
                                 <input type="hidden" name="price" value=${product.price}>
@@ -318,6 +327,7 @@
                         </div>
                         <div class="col-sm-3">
                             <form action="/changeRate" method="POST">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="isLike" value=true>
                                 <button type="submit" class="btn btn-success btn-block"
@@ -329,6 +339,7 @@
                         </div>
                         <div class="col-sm-3">
                             <form action="/changeRate" method="POST">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                 <input type="hidden" name="sku" value=${product.sku}>
                                 <input type="hidden" name="isLike" value=false>
                                 <button type="submit" class="btn btn-danger btn-block"

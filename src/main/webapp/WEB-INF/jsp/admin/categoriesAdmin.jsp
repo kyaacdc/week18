@@ -19,8 +19,9 @@
 
 <!-- NAVIGATION -->
 <nav class="page-navigation">
-    <div class="container">
-        <a href="/home" class="btn btn-warning btn-lg" style="float:left">Back to Homepage</a>
+    <div>
+        <div><a href="/home" class="btn btn-warning btn-lg" style="float:left">Back to Homepage</a></div>
+        <div><h2 style="float:left">Welcome ${pageContext.request.userPrincipal.name}</h2></div>
         <div align="right">
             <form action="/logout" method="post">
                 <button type="submit" class="btn btn-danger btn-lg">Log Out</button>
@@ -97,6 +98,141 @@
 
 <!-- MAIN SECTION -->
 <main>
+
+    <div>
+
+
+        <c:if test="${!empty listRootCategories}">
+            <h1>Add/Edit Category</h1>
+            <c:url var="addAction" value="/admin/categoriesAdmin/add"/>
+            <form:form action="${addAction}" commandName="category">
+                <table>
+                    <c:if test="${!empty category.name}">
+                        <tr>
+                            <td>
+                                <form:label path="id">
+                                    <spring:message text="ID"/>
+                                </form:label>
+                            </td>
+                            <td>
+                                <form:input path="id" readonly="true" size="8" disabled="true"/>
+                                <form:hidden path="id"/>
+                            </td>
+                        </tr>
+                    </c:if>
+                    <tr>
+                        <td>
+                            <form:label path="name">
+                                <spring:message text="name"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form:label path="description">
+                                <spring:message text="description"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="description"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form:label path="category">
+                                <spring:message text="category"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="category"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <c:if test="${!empty category.name}">
+                                <input type="submit"
+                                       value="<spring:message text="Edit Category"/>"/>
+                            </c:if>
+                            <c:if test="${empty category.name}">
+                                <input type="submit"
+                                       value="<spring:message text="Add Category"/>"/>
+                            </c:if>
+                        </td>
+                    </tr>
+                </table>
+            </form:form>
+        </c:if>
+
+        <c:if test="${!empty listSubCategories}">
+            <h1>Add/Edit Category</h1>
+            <c:url var="addAction" value="/admin/subcategoriesAdmin/add"/>
+            <form:form action="${addAction}" commandName="category">
+                <table>
+                    <c:if test="${!empty category.name}">
+                        <tr>
+                            <td>
+                                <form:label path="id">
+                                    <spring:message text="ID"/>
+                                </form:label>
+                            </td>
+                            <td>
+                                <form:input path="id" readonly="true" size="8" disabled="true"/>
+                                <form:hidden path="id"/>
+                            </td>
+                        </tr>
+                    </c:if>
+                    <tr>
+                        <td>
+                            <form:label path="name">
+                                <spring:message text="name"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form:label path="description">
+                                <spring:message text="description"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="description"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <form:label path="category">
+                                <spring:message text="category"/>
+                            </form:label>
+                        </td>
+                        <td>
+                            <form:input path="category"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <c:if test="${!empty category.name}">
+                                <input type="submit"
+                                       value="<spring:message text="Edit Category"/>"/>
+                            </c:if>
+                            <c:if test="${empty category.name}">
+                                <input type="submit"
+                                       value="<spring:message text="Add Category"/>"/>
+                            </c:if>
+                        </td>
+                    </tr>
+                </table>
+            </form:form>
+        </c:if>
+    </div>
+
     <div class="table-responsive">
         <c:if test="${!empty listRootCategories}">
             <table class="table table-striped table-condensed">
@@ -104,6 +240,7 @@
                     <th width="20">ID</th>
                     <th width="200">Name</th>
                     <th width="500">Description</th>
+                    <th width="100">Edit</th>
                 </tr>
 
                 <c:forEach items="${listRootCategories}" var="category">
@@ -113,6 +250,7 @@
                             <a href="<c:url value='/admin/subcategoriesAdmin/${category.id}@${category.name}'/>">${category.name}</a>
                         </td>
                         <td>${category.description}</td>
+                        <td><a href="<c:url value='/admin/categoriesAdmin/edit/${category.id}'/>">Edit</a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -124,7 +262,8 @@
                 <tr>
                     <th width="20">ID</th>
                     <th width="200">Name</th>
-                    <th width="1000">Description</th>
+                    <th width="800">Description</th>
+                    <th width="100">Edit</th>
                 </tr>
 
                 <c:forEach items="${listSubCategories}" var="category">
@@ -134,6 +273,7 @@
                             <a href="<c:url value='/admin/subcategoriesAdmin/${category.id}@${category.name}'/>">${category.name}</a>
                         </td>
                         <td>${category.description}</td>
+                        <td><a href="<c:url value='/admin/subcategoriesAdmin/edit/${category.id}'/>">Edit</a></td>
                     </tr>
                 </c:forEach>
             </table>

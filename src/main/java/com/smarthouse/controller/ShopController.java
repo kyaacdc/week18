@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 import java.util.*;
@@ -20,8 +19,6 @@ import java.util.stream.Collectors;
 import static com.smarthouse.service.util.enums.EnumProductSorter.SORT_BY_POPULARITY;
 import static com.smarthouse.service.util.enums.EnumSearcher.FIND_ALL;
 import static com.smarthouse.service.util.enums.EnumSearcher.FIND_IN_ALL_PLACES;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
 
 @Controller
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
@@ -39,15 +36,15 @@ public class ShopController {
 
     private static volatile long visitsCounter = 0;
 
-    private ShopManager shopManager;
+    private final ShopManager shopManager;
+
+    @Autowired
+    public ShopController(ShopManager shopManager) {
+        this.shopManager = shopManager;
+    }
 
     private synchronized void increaseAmountOfVisits() {
         visitsCounter++;
-    }
-
-    @Autowired
-    public void setShopManager(ShopManager shopManager) {
-        this.shopManager = shopManager;
     }
 
     @PostMapping(value = "/oneClickBuy")
